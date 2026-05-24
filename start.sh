@@ -5,18 +5,19 @@ UUID=${UUID:-"57f364b9-bcaf-4a35-91e3-8aae82e4ce12"}
 PATH_VAR=${PATH:-"/vless"}
 DOMAIN=${DOMAIN:-"speedtest.net"}
 
-echo "🚀 Starting Xray on port $PORT ..."
+echo "🚀 Starting Xray on port $PORT"
 
-# สร้าง config ด้วย echo แทน cat
-echo '{
-  "log": {"loglevel": "warning"},
+# สร้าง config
+cat > /root/config.json << 'EOF'
+{
+  "log": { "loglevel": "warning" },
   "inbounds": [{
     "tag": "vless-in",
     "port": '"$PORT"',
     "listen": "0.0.0.0",
     "protocol": "vless",
     "settings": {
-      "clients": [{"id": "'"$UUID"'"}],
+      "clients": [{ "id": "'"$UUID"'" }],
       "decryption": "none"
     },
     "streamSettings": {
@@ -28,9 +29,10 @@ echo '{
       }
     }
   }],
-  "outbounds": [{"tag": "direct", "protocol": "freedom"}]
-}' > /root/config.json
+  "outbounds": [{ "tag": "direct", "protocol": "freedom" }]
+}
+EOF
 
-echo "✅ Config created successfully on port $PORT"
+echo "✅ Config created"
 
 exec xray run -c /root/config.json
