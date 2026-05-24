@@ -1,0 +1,22 @@
+{
+  "log": {"loglevel": "warning"},
+  "inbounds": [{
+    "tag": "vless-in",
+    "port": 8080,
+    "listen": "0.0.0.0",
+    "protocol": "vless",
+    "settings": {
+      "clients": [{"id": "57f364b9-bcaf-4a35-91e3-8aae82e4ce12"}],
+      "decryption": "none"
+    },
+    "streamSettings": {
+      "network": "xhttp",
+      "security": "none",
+      "xhttpSettings": {
+        "path": "/vless",
+        "host": "speedtest.net"
+      }
+    }
+  }],
+  "outbounds": [{"tag": "direct", "protocol": "freedom"}]
+}
