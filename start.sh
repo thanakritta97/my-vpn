@@ -2,30 +2,32 @@
 
 PORT=${PORT:-8080}
 UUID=${UUID:-"57f364b9-bcaf-4a35-91e3-8aae82e4ce12"}
-PATH_VAR=${PATH:-"/vless"}
-DOMAIN=${DOMAIN:-"speedtest.net"}
+PRIVATE_KEY=${PRIVATE_KEY:-"0dbf50c7-580b-49aa-b48d-9e16711a1241"}
 
-echo "🚀 Starting Xray on port $PORT"
+echo "🚀 Starting Xray Reality on port $PORT ..."
 
-# สร้าง config
-cat > /root/config.json << 'EOF'
+cat > /root/config.json << EOF
 {
   "log": { "loglevel": "warning" },
   "inbounds": [{
-    "tag": "vless-in",
-    "port": '"$PORT"',
+    "tag": "vless-reality",
+    "port": $PORT,
     "listen": "0.0.0.0",
     "protocol": "vless",
     "settings": {
-      "clients": [{ "id": "'"$UUID"'" }],
+      "clients": [{ "id": "$UUID", "flow": "xtls-rprx-vision" }],
       "decryption": "none"
     },
     "streamSettings": {
-      "network": "xhttp",
-      "security": "none",
-      "xhttpSettings": {
-        "path": "'"$PATH_VAR"'",
-        "host": "'"$DOMAIN"'"
+      "network": "tcp",
+      "security": "reality",
+      "realitySettings": {
+        "show": false,
+        "dest": "www.speedtest.net:443",
+        "xver": 0,
+        "serverNames": ["speedtest.net", "www.speedtest.net"],
+        "privateKey": "$PRIVATE_KEY",
+        "shortIds": ["0123456789abcdef"]
       }
     }
   }],
@@ -33,6 +35,6 @@ cat > /root/config.json << 'EOF'
 }
 EOF
 
-echo "✅ Config created"
+echo "✅ Reality Config Created"
 
 exec xray run -c /root/config.json
